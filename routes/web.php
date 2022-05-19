@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Http\Request;
 use App\Models\Message;
 use Illuminate\Support\Facades\Route;
@@ -16,39 +18,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-Route::get('/', function () {
-    return view('welcome');
-})->name('Home');
-
+Route::get('/', [HomeController::Class , 'welcome'])->name('home');
 
 Route::view('/about', 'pages.about')->name('about');
 Route::view('/contact', 'pages.contact')->name('contact');
-Route::post('/contact', function (Request $Request) {
 
-    $Request->validate([
-        'name' => 'required|min:3|max:255',
-        'email'=> 'required|email',
-        'phone'=> 'required|starts_with:9639|digits_between:12,12',
-        'content'=> 'required|string|min:5'
-    ]);
+Route::post('/contact', [MessageController::Class,'store'])->name('messages.store');
+Route::get('/admin/messages', [MessageController::Class,'index'])->name('messages.index');
+Route::get('/admin/messages/{message}', [MessageController::Class,'show'])->name('messages.show');
 
-    $message = new Message();
-    $message->name = $Request->name;
-    $message->email = $Request->email;
-    $message->phone = $Request->phone;
-    $message->content = $Request->content;
-    $message->save();
 
-    return redirect('/admin/messages');
-})->name('contact');
-
-Route::get('/admin/messages', function () {
-    $messages = Message::all();
-    // $messages = Message::where('name',$message->name);
-    return view('messages.index',compact('messages'));
-})->name('messages.all');
-
-Route::get('/admin/messages/{message}', function (Message $message) {
-    return view('messages.show',compact('message'));
-})->name('messages.show');
