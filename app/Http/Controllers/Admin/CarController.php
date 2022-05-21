@@ -83,7 +83,7 @@ class CarController extends Controller
      */
     public function edit(Car $car)
     {
-        //
+        return view('admin.cars.edit',compact('car'));
     }
 
     /**
@@ -95,7 +95,20 @@ class CarController extends Controller
      */
     public function update(Request $request, Car $car)
     {
-        //
+        $validated = $request->validate([
+            'model'       =>  'required|min:3',
+            'brand'       =>  'required',
+            'price'       =>  'required|numeric|min:10000',
+            'colors'      =>  'required',
+            'gear_type'   =>  'required',
+            'year'        =>  'required',
+            'country'     =>  'required',
+            'is_new'      =>  'required',
+            'description' =>  'required',
+        ]);
+        $car->update($validated);
+
+        return redirect()->route('cars.index');
     }
 
     /**
@@ -106,6 +119,8 @@ class CarController extends Controller
      */
     public function destroy(Car $car)
     {
-        //
+        $car->delete();
+
+        return redirect()->route('cars.index');
     }
 }
