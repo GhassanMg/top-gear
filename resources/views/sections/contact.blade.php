@@ -1,11 +1,7 @@
 <!-- section -->
 <section id="contact" class="dark_bg_blue layout_padding cross_layout padding_top_0 margin_top_0">
     <div class="container">
-        <!-- /resources/views/post/create.blade.php -->
-
-        {{-- <h1>Create Post</h1>
-
-        @if ($errors->any())
+        {{-- @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
                     @foreach ($errors->all() as $error)
@@ -14,8 +10,6 @@
                 </ul>
             </div>
         @endif --}}
-
-        <!-- Create Post Form -->
         <div class="row">
             <div class="col-md-12">
                 <div class="full center">
@@ -27,13 +21,12 @@
             <div class="col-md-6">
                 <div class="full">
                     <div class="contact_form">
-                        <form method="POST" action="{{route('contact')}}">
+                        <form action="{{ route('contact') }}" method="POST">
                             @csrf
                             <fieldset class="row">
                                 <div class="col-md-12">
                                     <div class="full field">
-                                        <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                            placeholder="Your Name" name="name" value="{{ old('name') }}" />
+                                        <input type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Your Name" name="name" value="{{ old('name') }}" />
                                         @error('name')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -41,8 +34,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="full field">
-                                        <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                            placeholder="Email" name="email" value="{{ old('email') }}" />
+                                        <input type="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email" name="email" value="{{ old('email') }}" />
                                         @error('email')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -50,8 +42,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="full field">
-                                        <input type="text" class="form-control @error('phone') is-invalid @enderror"
-                                            placeholder="Phone" name="phone" value="{{ old('phone') }}" />
+                                        <input type="text" class="form-control @error('phone') is-invalid @enderror" placeholder="Phone" name="phone" value="{{ old('phone') }}" />
                                         @error('phone')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -59,8 +50,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="full field">
-                                        <textarea placeholder="Message" class="form-control @error('content') is-invalid @enderror"
-                                            name="content">{{ old('content') }}</textarea>
+                                        <textarea class="form-control @error('content') is-invalid @enderror" placeholder="Message" name="content">{{ old('content') }}</textarea>
                                         @error('content')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror

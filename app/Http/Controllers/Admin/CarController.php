@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Car;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class CarController extends Controller
@@ -15,8 +16,9 @@ class CarController extends Controller
      */
     public function index()
     {
-        $cars = Car::all();
-        return view('admin.cars.index',compact('cars'));
+        $cars = Car::paginate(1);
+
+        return view('admin.cars.index', compact('cars'));
     }
 
     /**
@@ -26,7 +28,8 @@ class CarController extends Controller
      */
     public function create()
     {
-        return view('admin.cars.create');
+        $categories = Category::all(['id', 'name', 'capacity']);
+        return view('admin.cars.create', compact('categories'));
     }
 
     /**
@@ -37,30 +40,26 @@ class CarController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'model'       =>  'required|min:3',
-            'brand'       =>  'required',
-            'price'       =>  'required|numeric|min:10000',
-            'colors'      =>  'required',
-            'gear_type'   =>  'required',
-            'year'        =>  'required',
-            'country'     =>  'required',
-            'is_new'      =>  'required',
-            'description' =>  'required',
+        $validated = $request->validate([
+            'brand'         => 'required',
+            'model'         => 'required',
+            'category_id'   => 'required|numeric|exists:categories,id',
+            'price'         => 'required|numeric|min:100000',
+            'colors'        => 'required',
+            'gear_type'     => 'required',
+            'year'          => 'required',
+            'country'       => 'required',
+            'is_new'        => 'boolean|nullable',
+            'description'   => 'required|string',
+            'featured_image'=> 'required|file|image',
         ]);
-        //dd($request);
-        $car = new Car;
-        $car->model = $request->model;
-        $car->brand = $request->brand;
-        $car->price = $request->price;
-        $car->colors = $request->colors;
-        $car->gear_type = $request->gear_type;
-        $car->year = $request->year;
-        $car->country = $request->country;
-        $car->is_new = $request->is_new;
-        $car->description = $request->description;
-        $car->save();
-        return redirect()->route('cars.index');
+
+
+        $validated['featured_image'] = $request->file('featured_image')->store('/', 'public');
+
+        $car = Car::create($validated);
+
+        return redirect()->route('admin.cars.index');
     }
 
     /**
@@ -71,7 +70,6 @@ class CarController extends Controller
      */
     public function show(Car $car)
     {
-        // dd($car);
         return view('admin.cars.show', compact('car'));
     }
 
@@ -83,7 +81,8 @@ class CarController extends Controller
      */
     public function edit(Car $car)
     {
-        return view('admin.cars.edit',compact('car'));
+        $categories = Category::all('id', 'name', 'capacity');
+        return view('admin.cars.edit', compact('car', 'categories'));
     }
 
     /**
@@ -96,19 +95,21 @@ class CarController extends Controller
     public function update(Request $request, Car $car)
     {
         $validated = $request->validate([
-            'model'       =>  'required|min:3',
-            'brand'       =>  'required',
-            'price'       =>  'required|numeric|min:10000',
-            'colors'      =>  'required',
-            'gear_type'   =>  'required',
-            'year'        =>  'required',
-            'country'     =>  'required',
-            'is_new'      =>  'required',
-            'description' =>  'required',
+            'brand'         => 'required|min:3',
+            'model'         => 'required',
+            'category_id'   => 'required',
+            'price'         => 'required|numeric|min:100000',
+            'colors'        => 'required',
+            'gear_type'     => 'required',
+            'year'          => 'required',
+            'country'       => 'required',
+            'is_new'        => 'boolean|nullable',
+            'description'   => 'required',
         ]);
+
         $car->update($validated);
 
-        return redirect()->route('cars.index');
+        return redirect()->route('admin.cars.index');
     }
 
     /**
@@ -121,6 +122,6 @@ class CarController extends Controller
     {
         $car->delete();
 
-        return redirect()->route('cars.index');
+        return redirect()->route('admin.cars.index');
     }
 }

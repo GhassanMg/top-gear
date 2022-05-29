@@ -22,25 +22,34 @@
     <!-- fevicon -->
     <link rel="icon" href="" type="image/gif" />
     <!-- Scrollbar Custom CSS -->
-    <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="/css/jquery.mCustomScrollbar.min.css">
     <!-- awesome fontfamily -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Tweaks for older IEs-->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+    @stack('css')
 </head>
 
 <body class="main-layout">
     <!-- loader  -->
     <div class="loader_bg">
-        <div class="loader"><img src="images/loading.gif" alt="" /></div>
+        <div class="loader"><img src="/images/loading.gif" alt="" /></div>
     </div>
     <!-- end loader -->
 
     <div class="wrapper">
         @include('partials.navbar')
         @include('partials.sidebar')
+
+        @if (session()->has('message'))
+            <div class="container">
+                <div class="alert alert-{{ session('message-type', 'info') }} alert-dismissible fade show" role="alert">
+                    {{ session('message') }}
+                </div>
+            </div>
+        @endif
 
         <div id="content">
             {{-- content --}}
@@ -52,7 +61,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="full">
-                                <h3>Top Gear</h3>
+                                <h3>AVALON MOTORS</h3>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -99,7 +108,7 @@
                             <div class="full">
                                 <h4 class="widget_heading">Contact Details</h4>
                                 <div class="full cont_footer">
-                                    <p><strong>TOPGEAR Car : Adderess</strong><br><br>Newyork 10012, USA<br>Phone: +987
+                                    <p><strong>AVALON Car : Adderess</strong><br><br>Newyork 10012, USA<br>Phone: +987
                                         654 3210<br>demo@gmail.com</p>
                                 </div>
                             </div>
@@ -183,4 +192,5 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8eaHt9Dh5H57Zh0xVTqxVdBFCvFMqFjQ&callback=initMap">
     </script>
     <!-- end google map js -->
+    @stack('js')
 </body>
